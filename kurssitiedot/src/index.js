@@ -25,8 +25,14 @@ const Content = (props) => {
 } 
 
 const Total = (props) => {
-  let amount = 0;
-  props.parts.forEach((x) => amount += x.exercises)
+  const amount = props.parts.reduce((a, b) => 
+    {
+      if ( typeof a === 'number') {
+        return a + b.exercises
+      }
+      return a.exercises + b.exercises
+    }
+  )
   return <p><strong>Number of exercises {amount}</strong></p>
 }
 
