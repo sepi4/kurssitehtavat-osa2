@@ -14,18 +14,28 @@ const Part = props => (
 
 const Content = (props) => {
   return <>
-    {props.parts.map(x => <Part 
-      name={x.name}
-      exercises={x.exercises}
+    {props.parts.map((x, i) => 
+      <Part 
+        key={x.name + i}
+        name={x.name}
+        exercises={x.exercises}
       />    
     )}
   </>
-}
+} 
 
-const Total = (props) => {
-  let amount = 0;
-  props.parts.forEach((x) => amount += x.exercises)
-  return <p>Number of exercises {amount}</p>
+// const Total = (props) => {
+//   let amount = 0;
+//   props.parts.forEach((x) => amount += x.exercises)
+//   return <p>Number of exercises {amount}</p>
+// }
+
+const Course = (props) => {
+  return <>
+    <Header name={props.course.name} />
+    <Content parts={props.course.parts}/>
+    {/* <Total parts={props.course.parts}/> */}
+  </>
 }
 
 const App = () => {
@@ -50,9 +60,7 @@ const App = () => {
 
   return (
     <div>
-      <Header name={course.name} />
-      <Content parts={course.parts}/>
-      <Total parts={course.parts}/>
+      <Course course={course} />
     </div>
   )
 }
