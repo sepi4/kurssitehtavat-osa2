@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+
+import personsService from '../services/persons'
 
 const App = () => {
 
@@ -12,7 +13,6 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
 
-  const baseUrl = "http://localhost:3001/persons"
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -30,33 +30,31 @@ const App = () => {
       number: newNumber,
       id: Math.random(),
     }
-    axios
-      .post(baseUrl, newPerson)
-      .then((responce) => {
-        console.log(responce.data)
-        setPersons(persons.concat(responce.data))
+
+    personsService
+      .create(newPerson)
+      .then(retNote => {
+        console.log(retNote)
+        setPersons(persons.concat(retNote))
         setNewName("")
         setNewNumber("")
       })
-
   }
 
   const mapPersons = persons
-    .filter((p) => 
-      p.name.toLowerCase().includes(filter.toLowerCase()))
+    .filter(p => {
+      return p.name.toLowerCase().includes(filter.toLowerCase())
+    })
     .map((p, i) => 
       <li key={p.name+i} >{p.name} {p.number}</li>)
 
-  const hook = () => {
-    axios
-      .get(baseUrl)
-      .then((responce) => {
-        // console.log(responce)
-        setPersons(responce.data)
-      })
-  }
 
-  useEffect(hook, [])
+
+  useEffect(() => {
+    personsService
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
+  },[])
 
   return (
     <div>
