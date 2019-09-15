@@ -34,19 +34,36 @@ const App = () => {
     personsService
       .create(newPerson)
       .then(retNote => {
-        console.log(retNote)
+        // console.log(retNote)
         setPersons(persons.concat(retNote))
         setNewName("")
         setNewNumber("")
       })
   }
 
+  const handleDeletePerson = id => {
+    const name = persons.find(p => p.id === id).name
+    const result = window.confirm(`Delete ${name} ?`)
+    if (result) {
+      personsService
+        .deletePerson(id)
+        .then(retNote => {
+          console.log(retNote)
+          setPersons(persons.filter(p => p.id !== id))
+        })
+    }
+  }
+
+
   const mapPersons = persons
     .filter(p => {
       return p.name.toLowerCase().includes(filter.toLowerCase())
     })
     .map((p, i) => 
-      <li key={p.name+i} >{p.name} {p.number}</li>)
+      <li key={p.name+i} >
+        {p.name} {p.number} 
+        <button onClick={() => handleDeletePerson(p.id)}>delete</button>
+      </li>)
 
 
 

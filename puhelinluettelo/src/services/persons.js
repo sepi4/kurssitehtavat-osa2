@@ -7,6 +7,12 @@ const create = newObject =>
     .post(baseUrl, newObject)
     .then(responce => responce.data)
 
+const deletePerson = id => 
+  axios
+    .delete(baseUrl + '/' + id)
+    .then(responce => responce.data)
+
+
 
 const getAll = () => 
   axios
@@ -14,4 +20,4 @@ const getAll = () =>
     .then(responce => responce.data)
 
 
-export default { create, getAll }
+export default { create, getAll, deletePerson }
