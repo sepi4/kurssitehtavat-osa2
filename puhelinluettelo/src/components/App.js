@@ -6,10 +6,13 @@ import PersonForm from './PersonForm'
 import Persons from './Persons'
 
 const App = () => {
+
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
+
+  const baseUrl = "http://localhost:3001/persons"
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -25,10 +28,17 @@ const App = () => {
     const newPerson = { 
       name: newName,
       number: newNumber,
+      id: Math.random(),
     }
-    setPersons([...persons, newPerson])
-    setNewName("")
-    setNewNumber("")
+    axios
+      .post(baseUrl, newPerson)
+      .then((responce) => {
+        console.log(responce.data)
+        setPersons(persons.concat(responce.data))
+        setNewName("")
+        setNewNumber("")
+      })
+
   }
 
   const mapPersons = persons
@@ -39,12 +49,13 @@ const App = () => {
 
   const hook = () => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(baseUrl)
       .then((responce) => {
-        console.log(responce)
+        // console.log(responce)
         setPersons(responce.data)
       })
   }
+
   useEffect(hook, [])
 
   return (
