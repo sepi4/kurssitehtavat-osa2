@@ -10,17 +10,16 @@ const App = () => {
   const hook = () => {
     axios.get('https://restcountries.eu/rest/v2/all')
     .then((responce) => {
-      // console.log(responce)
       setCountries(responce.data)
     })
   }
   useEffect(hook, [])
 
+
   const mapCountries = () => {
     const filteredCountries = countries.filter(c => {
       return c.name.toLowerCase().includes(search.toLowerCase())
     })
-    // console.log(filteredCountries)
     if (filteredCountries.length === 0) {
       return
     }
@@ -28,7 +27,11 @@ const App = () => {
       return "Too many matches,  specify another filter"
     }
     if (filteredCountries.length > 1) {
-      return filteredCountries.map((c, i) => <li key={c.name+i}>{c.name}</li>)
+      return filteredCountries.map((c, i) => 
+        <li key={c.name+i}>
+          {c.name}
+          <button onClick={() => setSearch(c.name)}>show</button>
+        </li>)
     }
     const country = filteredCountries[0]
     return <div>
@@ -41,7 +44,6 @@ const App = () => {
       </ul>
       <img width={100} alt={`flag of ${country.flag}`} src={country.flag} />
     </div>
-    
   }
 
   return (
@@ -51,7 +53,6 @@ const App = () => {
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-
       <div>
         {mapCountries()}
       </div>
