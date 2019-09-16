@@ -19,9 +19,19 @@ const App = () => {
     if (newName.length === 0 || newNumber.length === 0) {
       return
     }
-    const unique = persons.find(p => p.name === newName) === undefined
-    if (!unique) {
-      alert(`${newName} is already added to phonebook`)
+    const withSameName = persons.find(p => p.name === newName)
+    if (withSameName !== undefined) {
+      const result = window.confirm(`${newName} is already in phonebook. Replace old number with new one?`)
+      // console.log(withSameName)
+      if (result) {
+        personsService
+          .updateNumber(withSameName.id, {...withSameName, number: newNumber })
+          .then(retNote => {
+            setPersons(persons.map(p => p.id !== retNote.id ? p : retNote))
+            setNewName("")
+            setNewNumber("")
+          })
+      }
       return
     }
 
@@ -48,7 +58,7 @@ const App = () => {
       personsService
         .deletePerson(id)
         .then(retNote => {
-          console.log(retNote)
+          // console.log(retNote)
           setPersons(persons.filter(p => p.id !== id))
         })
     }

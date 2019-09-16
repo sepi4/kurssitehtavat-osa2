@@ -9,7 +9,7 @@ const create = newObject =>
 
 const deletePerson = id => 
   axios
-    .delete(baseUrl + '/' + id)
+    .delete(`${baseUrl}/${id}`)
     .then(responce => responce.data)
 
 
@@ -19,5 +19,11 @@ const getAll = () =>
     .get(baseUrl)
     .then(responce => responce.data)
 
+const updateNumber = (id, newObject) =>
+  axios
+    .put(`${baseUrl}/${id}`, newObject)
+    .then(responce => responce.data)
 
-export default { create, getAll, deletePerson }
+
+
+export default { create, getAll, deletePerson, updateNumber }
