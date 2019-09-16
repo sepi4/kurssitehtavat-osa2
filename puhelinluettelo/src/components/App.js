@@ -14,6 +14,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
   const [ message, setMessage ] = useState(null)
+  const [ error, setError ] = useState(null)
 
 
   const handleSubmit = (event) => {
@@ -34,6 +35,9 @@ const App = () => {
             setNewNumber("")
             addMessage(`Updated: ${retNote.name}`)
           })
+          .catch(err => {
+            addError(`Error on server`)
+          })
       }
       return
     }
@@ -52,12 +56,22 @@ const App = () => {
         setNewNumber("")
         addMessage(`Added: ${retNote.name}`)
       })
+      .catch(err => {
+        addError(`Error on server`)
+      })
+
   }
 
   const addMessage = text => {
     setMessage(text)
     setTimeout(() => {
       setMessage(null)
+    }, 5000)
+  }
+  const addError = text => {
+    setError(text)
+    setTimeout(() => {
+      setError(null)
     }, 5000)
   }
 
@@ -71,6 +85,9 @@ const App = () => {
           console.log(retNote)
           setPersons(persons.filter(p => p.id !== id))
           addMessage(`Deleted: ${name}`)
+        })
+        .catch(err => {
+          addError(`Error on server`)
         })
     }
   }
@@ -97,7 +114,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message} />
+      <Notification error={error} message={message} />
       <Filter  
         filter={filter}
         setFilter={setFilter}
