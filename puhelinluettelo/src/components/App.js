@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Persons from './Persons'
+import Notification from './Notification'
 
 import personsService from '../services/persons'
 
@@ -12,6 +13,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
+  const [ message, setMessage ] = useState(null)
 
 
   const handleSubmit = (event) => {
@@ -30,6 +32,7 @@ const App = () => {
             setPersons(persons.map(p => p.id !== retNote.id ? p : retNote))
             setNewName("")
             setNewNumber("")
+            addMessage(`Updated: ${retNote.name}`)
           })
       }
       return
@@ -44,11 +47,18 @@ const App = () => {
     personsService
       .create(newPerson)
       .then(retNote => {
-        // console.log(retNote)
         setPersons(persons.concat(retNote))
         setNewName("")
         setNewNumber("")
+        addMessage(`Added: ${retNote.name}`)
       })
+  }
+
+  const addMessage = text => {
+    setMessage(text)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   const handleDeletePerson = id => {
@@ -58,8 +68,9 @@ const App = () => {
       personsService
         .deletePerson(id)
         .then(retNote => {
-          // console.log(retNote)
+          console.log(retNote)
           setPersons(persons.filter(p => p.id !== id))
+          addMessage(`Deleted: ${name}`)
         })
     }
   }
@@ -86,6 +97,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={message} />
       <Filter  
         filter={filter}
         setFilter={setFilter}
